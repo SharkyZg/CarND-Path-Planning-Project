@@ -1,4 +1,3 @@
-#! /bin/bash
 brew install openssl libuv cmake zlib
 git clone https://github.com/uWebSockets/uWebSockets 
 cd uWebSockets
