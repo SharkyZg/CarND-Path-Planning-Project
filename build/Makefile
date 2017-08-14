@@ -123,6 +123,33 @@ path_planning/fast:
 	$(MAKE) -f CMakeFiles/path_planning.dir/build.make CMakeFiles/path_planning.dir/build
 .PHONY : path_planning/fast
 
+src/PTG.o: src/PTG.cpp.o
+
+.PHONY : src/PTG.o
+
+# target to build an object file
+src/PTG.cpp.o:
+	$(MAKE) -f CMakeFiles/path_planning.dir/build.make CMakeFiles/path_planning.dir/src/PTG.cpp.o
+.PHONY : src/PTG.cpp.o
+
+src/PTG.i: src/PTG.cpp.i
+
+.PHONY : src/PTG.i
+
+# target to preprocess a source file
+src/PTG.cpp.i:
+	$(MAKE) -f CMakeFiles/path_planning.dir/build.make CMakeFiles/path_planning.dir/src/PTG.cpp.i
+.PHONY : src/PTG.cpp.i
+
+src/PTG.s: src/PTG.cpp.s
+
+.PHONY : src/PTG.s
+
+# target to generate assembly for a file
+src/PTG.cpp.s:
+	$(MAKE) -f CMakeFiles/path_planning.dir/build.make CMakeFiles/path_planning.dir/src/PTG.cpp.s
+.PHONY : src/PTG.cpp.s
+
 src/main.o: src/main.cpp.o
 
 .PHONY : src/main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... path_planning"
+	@echo "... src/PTG.o"
+	@echo "... src/PTG.i"
+	@echo "... src/PTG.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

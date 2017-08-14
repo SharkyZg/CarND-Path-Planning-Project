@@ -772,6 +772,22 @@ lapacke_mangling.h
 
 /Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
+/Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/PTG.cpp
+PTG.h
+/Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/PTG.h
+
+/Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/PTG.h
+math.h
+-
+iostream
+-
+vector
+-
+Eigen-3.3/Eigen/Core
+/Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/Core
+Eigen-3.3/Eigen/QR
+/Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/QR
+
 /Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/json.hpp
 algorithm
 -
@@ -851,6 +867,8 @@ json.hpp
 /Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/json.hpp
 spline.h
 /Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/spline.h
+PTG.h
+/Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/PTG.h
 
 /Users/markosarkanj/SDC/CarND-Path-Planning-Project/src/spline.h
 cstdio
