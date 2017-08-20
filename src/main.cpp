@@ -280,7 +280,7 @@ int main() {
                 
                 if(d < (2+4*lane+2) && d > (2+4*lane-2)){
                     //check s values grater than mine and s gap
-                    if((check_car_s-car_s) < 30) // If front car is in 30 m break and change lane.
+                    if((check_car_s-car_s) < 25) // If front car is in 30 m break and change lane.
                     {
                       too_close = true;
                       switch_lane = true;
