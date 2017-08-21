@@ -217,6 +217,7 @@ slower_car_in_lane_cost function runs for each lane to add higher cost to lanes 
 
 If a vehicle is closer to the car more cost will be added. If vehicle does not exist, then the cost will be 0.
 // Function that adds costs to the lane based on speed of cars in lane.
+```
 double PTG::slower_car_in_lane_cost(int lane, vector<vector<double>> &cars_in_lane_front_i, double car_s, double prev_size) {
   double cost = 0;
   double cost_temp = 0;
@@ -235,9 +236,11 @@ double PTG::slower_car_in_lane_cost(int lane, vector<vector<double>> &cars_in_la
   }
   return cost;
 }
+```
 ### collision_cost Function
 
 collision_cost function ensures that we do not collide with some other vehicle during lane switch. If there is some other vehicle in lane where we plan to switch and there is collision risk with that vehicle (car_s is in range of other car's position), very high cost will be added.
+```
 // Function that adds costs to the lane based on collision risk.
 double PTG::collision_cost(int car_s, vector<vector<double>> &cars_in_lane_range_i, double prev_size)
 {
@@ -257,19 +260,23 @@ double PTG::collision_cost(int car_s, vector<vector<double>> &cars_in_lane_range
   return cost;
   
 }
+```
 ### lane_switching_cost Function
 
 lane_switching_cost function adds small cost for lane switch to avoid that car constantly switches lanes when costs of two lanes are basically the same.
+```
 // Function to add cost in case of switching lanes. 
 double PTG::lane_switching_cost(int current_lane, int new_lane)
 {
   if(current_lane == new_lane) {return 0;} else return 5;
 }
+```
 ### Returning Optimal Lane
 
 At the end of the PTG.Lane cost function optimal lane with the lowest cost will be returned. 
 
 If we need to switch 2 lanes, for example from left lane to right lane, then the middle lane will be returned first. We do this to avoid high jerk due to switching two lanes at same time and because it is not usual and expected from other drivers that the car switches two lanes at once.
+```
 for(int i = 0; i < 3; i++){  // Check which lane has the lowest point.
   if(lane_cost[i]<lowest_lane_cost) {
     optimal_lane = i;
@@ -284,14 +291,15 @@ if(lane==0 && optimal_lane == 2) {optimal_lane=1;}
 if(lane==2 && optimal_lane == 0) {optimal_lane=1;}
 
 return optimal_lane;
+```
 ## Path Generation
 
 After optimal lane has been chosen, it is necessary to generate path on which the car will drive. Final path will be sent as an array of x and y coordiates to the simulator.
 
-
 ### Get Reference Cordinates
 
 First we need to get starting coordinates that we will use as reference points. We will add them to ptsx and ptsy vectors. If there are no previous coordinates returned from the simulator available, we will use car's current coordinates as a starting point. If there are at least two coordinates in previous_path vectors available, we will use them as a starting point and to calculate car's steering angle (yaw rate).
+```
 // Create a list of widely spaced (x,y) waypoints, evenly spacet at 30 m
 // Later we will interoplate these waypoints with a spline and fill it in with more points 
 
@@ -336,11 +344,13 @@ else
   ptsy.push_back(ref_y);          
 
 }
+```
 ### Create List of Evenly Spaced Corrdinates
 
 Now we will calculate waypoints in freenet coordinate system, by adding 30 meters to the "s" axis. "d" axis is calculated by multiplying current (optimal) lane by 4 and adding 2. For example "d" axis for the lane 0 (left) is 2+4*0 = 2. 
 
 With help of the getXY function we get cartesian coordinates that can later be used by the simulator.  
+```
 // In Frenet add evenly 30m spaced points ahead of the starting reference
 
 vector<double> next_wp0 = getXY(car_s+30, (2+4*lane), map_waypoints_s, map_waypoints_x, map_waypoints_y);
@@ -364,9 +374,11 @@ for (int i = 0; i < ptsx.size(); i++)
   ptsx[i] = (shift_x * cos(0-ref_yaw)-shift_y * sin(0-ref_yaw));
   ptsy[i] = (shift_x * sin(0-ref_yaw)+shift_y * cos(0-ref_yaw));
 }
+```
 ### Spline function
 
 As we have created vectors with reference points for future trajectory, we need to make trajectory smooth to avoid high jerk. Another thing that we need to control is distance between trajectory points, which will affect car's speed. We do that with the help of spline function. We calculate a spline function by adding previously created ptsx and ptsy vectors: s.set_points(ptsx, ptsy); . 
+```
 // create a spline
 tk::spline s;
 
@@ -385,11 +397,13 @@ for(int i = 0; i < previous_path_x.size(); i++)
   next_x_vals.push_back(previous_path_x[i]);
   next_y_vals.push_back(previous_path_y[i]);
 }
+```
 Before we can start calculating points based on spline function, it is necessary to calculate how to convert previously defined points into spline trajectory. To do this we need to calculate target_y based on target_x of 30 meters and a resulting target distance.
 
 After that we can start looping to add new points that need to be send back to the simulator (50 - size of previous path).
 
 To calculate to how many points we will split our target distance of 30 meters, we will use this formula: "target_dist/(.02*ref_vel/2.24)" where ref_vel represents desired velocity. Then we can divide target_x with resulting number N and add this value to previous x_point(x_add_on) so that we calculate next x_point. When we insert this newly calculated x_point to spline function "s", we are able to calculate y_point value as well.
+```
 // Calculate how to break up spline points so that we travel at our desired reference velocity
 double target_x = 30.0;
 double target_y = s(target_x);
@@ -409,10 +423,10 @@ for (int i = 1; i<= 50 - previous_path_x.size(); i++) {
 
   double x_ref = x_point;
   double y_ref = y_point;
-
+```
 
 The last thing that we need to address before sending data to the simulator is to rotate new trajectory points back to standard coordinates and to add them to next_x_vals and next_y_vals vectors.
-
+```
   // rotate back to normal after rotating it earlier
   x_point = (x_ref * cos(ref_yaw) - y_ref * sin(ref_yaw));
   y_point = (x_ref * sin(ref_yaw) + y_ref * cos(ref_yaw));
@@ -423,10 +437,11 @@ The last thing that we need to address before sending data to the simulator is t
   next_x_vals.push_back(x_point);
   next_y_vals.push_back(y_point);
 }
-
+```
 ### Returning Data to the Simulator
 
 Now that we have prepared vectors with new trajectory data we need to send it to the simulator by using ws.send function.
+```
 json msgJson;
 
 // add new path points that will be send to the simulator.
@@ -437,6 +452,7 @@ auto msg = "42[\"control\","+ msgJson.dump()+"]";
 
 //this_thread::sleep_for(chrono::milliseconds(1000));
 ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
+```
 ## Conclusion
 
 I found the path planning project very interesting as this was the missing link to connect all the things that we learned during the previous projects. By being able to create desired trajectories based on maps and sensor fusion inputs I feel that I am one step closer to become a self driving car engineer.
